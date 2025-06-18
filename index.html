@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Street Fighter Game Jam</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <script src="characters.js"></script>
+    <script src="characterSelect.js"></script>
+    <script src="sketch.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: black;
+            font-family: 'Arial', sans-serif;
+            color: white;
+        }
+        
+        #game-container {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Menu principal */
+        #menu-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('https://images.genius.com/6bdd9b1c1e7994f3ef0ce7df195b8389.480x360x1.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .game-title {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            font-size: 60px;
+            color: #ffcc00;
+            text-shadow: 3px 3px 0 #ff0000, 
+                        -3px -3px 0 #ff0000,
+                        3px -3px 0 #ff0000,
+                        -3px 3px 0 #ff0000;
+            margin-bottom: 60px;
+            transform: skew(-5deg);
+        }
+        
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .menu-option {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            font-size: 28px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ffcc00;
+            border-radius: 5px;
+            margin: 10px 0;
+            padding: 15px 40px;
+            width: 250px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .menu-option:hover {
+            background-color: #ffcc00;
+            color: #000;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px #ffcc00;
+        }
+        
+        /* Seleção de personagens */
+        #character-select {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('https://www.fightersgeneration.com/characters2/ryu-sf2-stage.jpg');
+            background-size: cover;
+        }
+        
+        .char-select-container {
+            width: 800px;
+            height: 500px;
+            margin: 50px auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 3px solid #444;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .char-select-header {
+            color: #ffcc00;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .char-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .char-item {
+            width: 150px;
+            height: 150px;
+            margin: 10px;
+            background-color: #222;
+            border: 3px solid transparent;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .char-item:hover {
+            border-color: #ffcc00;
+        }
+        
+        .char-item.selected-p1 {
+            border-color: #ff0000;
+        }
+        
+        .char-item.selected-p2 {
+            border-color: #0088ff;
+        }
+        
+        .char-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .char-item .char-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            font-size: 14px;
+        }
+        
+        .player-select-area {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        
+        .player-select {
+            width: 200px;
+            text-align: center;
+        }
+        
+        .player-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .player1-title {
+            color: #ff0000;
+        }
+        
+        .player2-title {
+            color: #0088ff;
+        }
+        
+        .player-char {
+            font-size: 24px;
+            color: #ffcc00;
+            height: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .start-button {
+            margin-top: 30px;
+            background-color: #008800;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .start-button:hover {
+            background-color: #00aa00;
+        }
+        
+        /* Créditos */
+        #credits-container {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('https://www.fightersgeneration.com/characters2/ryu-sf2-stage.jpg');
+            background-size: cover;
+        }
+        
+        .credits-overlay {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .credits-content {
+            width: 700px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 3px solid #f00;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .credits-title {
+            font-size: 40px;
+            color: #ffcc00;
+            margin-bottom: 30px;
+        }
+        
+        .credits-section {
+            margin-bottom: 20px;
+        }
+        
+        .credits-section h3 {
+            color: #f00;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .credits-section p {
+            color: white;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .back-button {
+            margin-top: 20px;
+            background-color: #700;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: 2px solid #f00;
+        }
+        
+        .back-button:hover {
+            background-color: #900;
+        }
+        
+        /* Indicador de seleção atual */
+        .selection-indicator {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 22px;
+        }
+        
+        .current-player {
+            color: #ff0000;
+        }
+        
+        .current-player.p2 {
+            color: #0088ff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu Principal -->
+    <div id="menu-container">
+        <h1 class="game-title">STREET FIGHTER</h1>
+        <div class="menu-options">
+            <div class="menu-option" onclick="showCharacterSelect()">VERSUS MODE</div>
+            <div class="menu-option" onclick="showCredits()">CREDITS</div>
+        </div>
+    </div>
+
+    <!-- Seleção de Personagens -->
+    <div id="character-select">
+        <div class="char-select-container">
+            <div class="char-select-header">SELECT YOUR CHARACTER</div>
+            
+            <div class="selection-indicator">
+                <span class="current-player" id="current-player-text">PLAYER 1 CHOOSE</span>
+            </div>
+            
+            <div class="char-grid">
+                <div class="char-item" onclick="selectCharacter('ryu')">
+                    <img src="Sprites/Ryu Standing.gif" alt="Ryu">
+                    <div class="char-name">RYU</div>
+                </div>
+                <div class="char-item" onclick="selectCharacter('ken')">
+                    <img src="Sprites/Ken Standing.gif" alt="Ken">
+                    <div class="char-name">KEN</div>
+                </div>
+                <div class="char-item" onclick="selectCharacter('chun')">
+                    <img src="Sprites/Chun Standing.gif" alt="Chun-Li">
+                    <div class="char-name">CHUN-LI</div>
+                </div>
+                <div class="char-item" onclick="selectCharacter('makoto')">
+                    <img src="Sprites/Makoto Standing.gif" alt="Makoto">
+                    <div class="char-name">MAKOTO</div>
+                </div>
+            </div>
+            
+            <div class="player-select-area">
+                <div class="player-select">
+                    <div class="player-title player1-title">PLAYER 1</div>
+                    <div class="player-char" id="player1-char">?</div>
+                </div>
+                <div class="player-select">
+                    <div class="player-title player2-title">PLAYER 2</div>
+                    <div class="player-char" id="player2-char">?</div>
+                </div>
+            </div>
+            
+            <button class="start-button" id="start-button" onclick="startGame()">FIGHT!</button>
+        </div>
+    </div>
+
+    <!-- Créditos -->
+    <div id="credits-container">
+        <div class="credits-overlay">
+            <div class="credits-content">
+                <h2 class="credits-title">Créditos</h2>
+                
+                <div class="credits-section">
+                    <h3>Trabalho Final</h3>
+                    <p>Disciplina: Programação para Games</p>
+                    <p>Curso: Ciência da Computação</p>
+                    <p>Universidade XYZ - 2023</p>
+                </div>
+                
+                <div class="credits-section">
+                    <h3>Desenvolvedores</h3>
+                    <p>Gabriel Silva - Programação</p>
+                    <p>Lucas Oliveira - Design</p>
+                    <p>Ana Carolina - Arte</p>
+                    <p>Matheus Souza - Sound Design</p>
+                </div>
+                
+                <div class="credits-section">
+                    <h3>Tecnologias Utilizadas</h3>
+                    <p>HTML5, CSS3, JavaScript</p>
+                    <p>p5.js para renderização e animação</p>
+                    <p>Sprites baseados em Street Fighter II</p>
+                </div>
+                
+                <button class="back-button" onclick="backToMenu()">Voltar ao Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container do Jogo -->
+    <div id="game-container"></div>
+
+    <script>
+        let currentPlayer = 1;
+        let selectedPlayer1 = null;
+        let selectedPlayer2 = null;
+        let selectedP1Element = null;
+        let selectedP2Element = null;
+        
+        function showCharacterSelect() {
+            document.getElementById('menu-container').style.display = 'none';
+            document.getElementById('character-select').style.display = 'block';
+        }
+        
+        function showCredits() {
+            document.getElementById('menu-container').style.display = 'none';
+            document.getElementById('credits-container').style.display = 'block';
+        }
+        
+        function backToMenu() {
+            document.getElementById('credits-container').style.display = 'none';
+            document.getElementById('character-select').style.display = 'none';
+            document.getElementById('menu-container').style.display = 'block';
+        }
+        
+        function updateSelectionIndicator() {
+            const indicator = document.getElementById('current-player-text');
+            indicator.textContent = currentPlayer === 1 ? 'PLAYER 1 CHOOSE' : 'PLAYER 2 CHOOSE';
+            indicator.className = currentPlayer === 1 ? 'current-player' : 'current-player p2';
+        }
+        
+        function selectCharacter(char) {
+            const charItems = document.querySelectorAll('.char-item');
+            
+            // Encontrar o elemento clicado
+            let clickedElement = null;
+            for (let item of charItems) {
+                if (item.querySelector('.char-name').textContent === getCharDisplayName(char)) {
+                    clickedElement = item;
+                    break;
+                }
+            }
+            
+            if (clickedElement) {
+                // Permitir troca de seleção para ambos os jogadores
+                if (currentPlayer === 1) {
+                    // Remover seleção anterior do P1 se houver
+                    if (selectedP1Element) {
+                        selectedP1Element.classList.remove('selected-p1');
+                    }
+                    
+                    // Atualizar seleção do P1
+                    selectedPlayer1 = char;
+                    selectedP1Element = clickedElement;
+                    document.getElementById('player1-char').innerText = getCharDisplayName(char);
+                    clickedElement.classList.add('selected-p1');
+                    
+                    // Mudar para seleção do P2
+                    currentPlayer = 2;
+                } else {
+                    // Remover seleção anterior do P2 se houver
+                    if (selectedP2Element) {
+                        selectedP2Element.classList.remove('selected-p2');
+                    }
+                    
+                    // Atualizar seleção do P2
+                    selectedPlayer2 = char;
+                    selectedP2Element = clickedElement;
+                    document.getElementById('player2-char').innerText = getCharDisplayName(char);
+                    clickedElement.classList.add('selected-p2');
+                    
+                    // Mudar para seleção do P1
+                    currentPlayer = 1;
+                }
+                
+                // Atualizar o indicador de seleção
+                updateSelectionIndicator();
+                
+                // Mostrar botão se ambos os jogadores escolheram
+                if (selectedPlayer1 && selectedPlayer2) {
+                    document.getElementById('start-button').style.display = 'inline-block';
+                }
+            }
+        }
+        
+        function getCharDisplayName(char) {
+            switch(char) {
+                case 'ryu': return 'RYU';
+                case 'ken': return 'KEN';
+                case 'chun': return 'CHUN-LI';
+                case 'makoto': return 'MAKOTO';
+                default: return char.toUpperCase();
+            }
+        }
+        
+        function startGame() {
+            document.getElementById('character-select').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            
+            // Mapear os personagens selecionados para os caracteres do jogo
+            const characterMap = {
+                'ryu': 'ryu',
+                'ken': 'ken',
+                'chun': 'chun-li', // Mapeando "chun" para "chun-li" se necessário
+                'makoto': 'makoto'
+            };
+            
+            // Usar os personagens selecionados
+            window.selectedPlayer1 = CHARACTERS[characterMap[selectedPlayer1 || 'ryu']];
+            window.selectedPlayer2 = CHARACTERS[characterMap[selectedPlayer2 || 'ken']];
+            
+            new p5(sketch, 'game-container');
+        }
+
+        // Alternar seleção de jogador com Tab
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault(); // Evitar comportamento padrão do Tab
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                updateSelectionIndicator();
+            }
+            
+            // ESC para voltar ao menu
+            if (e.key === 'Escape') {
+                location.reload();
+            }
+        });
+    </script>
+</body>
+</html>

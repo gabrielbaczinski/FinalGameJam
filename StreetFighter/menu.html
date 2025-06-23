@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Street Fighter - FINAL JAM EDITION</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      width: 100vw;
+      height: 100vh;
+      background-color: black;
+      margin: 0;
+      padding: 0;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      overflow: hidden;
+    }
+    .title-screen {
+      width: 100vw;
+      height: 100vh;
+      background-color: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2rem 0;
+      box-sizing: border-box;
+      color: white;
+      position: relative;
+    }
+    .logo-container {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .sf-logo {
+      font-size: 3rem;
+      color: #ffcc00;
+      text-shadow: 
+        0 0 10px #ff0000,
+        0 0 20px #ff0000,
+        0 0 30px #ff0000;
+      letter-spacing: 2px;
+      transform: perspective(400px) rotateX(20deg);
+      margin-bottom: 0.5rem;
+    }
+    .sf-subtitle {
+      font-size: 1.2rem;
+      color: white;
+      letter-spacing: 3px;
+    }
+    .press-start {
+      white-space: nowrap;
+      position: absolute;
+      font-size: 1.5rem;
+      color: #ffcc00;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-shadow: 0 0 10px #ff0000;
+      margin: 2rem 0;
+      z-index: 2;
+    }
+    .menu-options {
+      position: absolute;
+      display: flex;
+      top: 45%;
+      left: 50%;
+      transform: translateX(-50%);
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      z-index: 2;
+    }
+    .menu-item {
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.5rem 2rem;
+      text-align: center;
+      transition: all 0.2s;
+      background: none;
+      border: none;
+      color: inherit;
+      font-family: inherit;
+      outline: none;
+    }
+    .menu-item:hover, .menu-item.selected {
+      color: #ffcc00;
+      transform: scale(1.1);
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    }
+    .sf-footer {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      margin-top: 3rem;
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      text-align: center;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="title-screen">
+    <div class="logo-container">
+      <h1 class="sf-logo">STREET FIGHTER</h1>
+      <div class="sf-subtitle">FINAL JAM EDITION</div>
+    </div>
+    <div class="press-start" id="press-start">PRESSIONE ENTER PARA CONTINUAR</div>
+    <div class="menu-options" id="menu-options" style="display:none;">
+      <button class="menu-item selected" id="menu-versus">VERSUS</button>
+      <button class="menu-item" id="menu-howto">COMO JOGAR</button>
+      <button class="menu-item" id="menu-exit">SAIR</button>
+    </div>
+    <div class="sf-footer">
+      © Criado por Gabriel Baczinski e João Guilherme Camargo
+    </div>
+  </div>
+  <script>
+    let showPressStart = true;
+    let menuActive = false;
+    let selected = 0;
+    const menuItems = [
+      document.getElementById('menu-versus'),
+      document.getElementById('menu-howto'),
+      document.getElementById('menu-exit')
+    ];
+
+    // Piscar o "Press Start"
+    setInterval(() => {
+      if (!menuActive) {
+        showPressStart = !showPressStart;
+        document.getElementById('press-start').style.visibility = showPressStart ? 'visible' : 'hidden';
+      }
+    }, 800);
+
+    // Ativar menu ao pressionar Enter
+    document.addEventListener('keydown', function(e) {
+      if (!menuActive && (e.key === 'Enter' || e.keyCode === 13)) {
+        document.getElementById('press-start').style.display = 'none';
+        document.getElementById('menu-options').style.display = 'flex';
+        menuActive = true;
+        menuItems[selected].classList.add('selected');
+      } else if (menuActive) {
+        if (e.key === 'ArrowUp' || e.keyCode === 38) {
+          menuItems[selected].classList.remove('selected');
+          selected = selected > 0 ? selected - 1 : selected;
+          menuItems[selected].classList.add('selected');
+        }
+        if (e.key === 'ArrowDown' || e.keyCode === 40) {
+          menuItems[selected].classList.remove('selected');
+          selected = selected < menuItems.length - 1 ? selected + 1 : selected;
+          menuItems[selected].classList.add('selected');
+        }
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          handleSelect(selected);
+        }
+      }
+    });
+
+    // Clique do mouse
+    menuItems.forEach((item, idx) => {
+      item.addEventListener('mouseover', () => {
+        if (menuActive) {
+          menuItems[selected].classList.remove('selected');
+          selected = idx;
+          menuItems[selected].classList.add('selected');
+        }
+      });
+      item.addEventListener('click', () => {
+        if (menuActive) handleSelect(idx);
+      });
+    });
+
+    function handleSelect(idx) {
+      switch(idx) {
+        case 0:
+          // VERSUS
+          window.location.href = "selecao.html";
+          break;
+        case 1:
+          // COMO JOGAR
+          window.location.href = "options.html";
+          break;
+        case 2:
+          // SAIR (não faz nada em web)
+          alert("Obrigado por jogar!");
+          break;
+      }
+    }
+;
+  </script>
+  <script src="music.js"></script>
+</body>
+</html>

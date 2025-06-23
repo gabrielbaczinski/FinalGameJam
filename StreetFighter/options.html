@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Como Jogar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    /* Cole aqui TODO o CSS do seu arquivo atual, sem a parte do import React...export default... */
+    /* ... (copie todo o CSS do seu arquivo) ... */
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    .credits-screen {
+      width: 100%;
+      height: 100vh;
+      background-color: #000;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      padding: 1.5rem 1rem;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .credits-title {
+      font-size: 1.8rem;
+      color: #ffcc00;
+      text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000;
+      margin: 1rem 0 1.5rem 0;
+      position: sticky;
+      top: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 0.5rem 1rem;
+      z-index: 10;
+      width: 100%;
+      text-align: center;
+    }
+    .controls-section {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .controls-column {
+      width: 45%;
+      min-width: 280px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border: 1px solid #ffcc00;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 0 0.5rem 1rem 0.5rem;
+      flex-grow: 1;
+    }
+    .controls-column h2 {
+      font-size: 1.1rem;
+      color: #ffcc00;
+      text-align: center;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+    }
+    .control-group {
+      margin-bottom: 1.2rem;
+    }
+    .control {
+      display: flex;
+      margin-bottom: 0.6rem;
+      align-items: center;
+    }
+    .key {
+      width: 80px;
+      background-color: #222;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+      padding: 0.2rem 0.3rem;
+      margin-right: 0.8rem;
+      text-align: center;
+      font-size: 0.7rem;
+      box-shadow: 0 2px 0 #000;
+    }
+    .action {
+      font-size: 0.7rem;
+      color: #cccccc;
+    }
+    .special-moves {
+      font-size: 0.9rem;
+      color: #ff6666;
+      margin-bottom: 0.8rem;
+      text-align: center;
+    }
+    .game-tips, .game-mechanics {
+      width: 90%;
+      max-width: 1000px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border: 1px solid #ffcc00;
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .game-tips h3, .game-mechanics h3 {
+      color: #4488ff;
+      text-align: center;
+      margin-bottom: 0.8rem;
+      font-size: 1rem;
+    }
+    .game-tips ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .game-tips li {
+      font-size: 0.7rem;
+      margin-bottom: 0.6rem;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+    .game-tips li::before {
+      content: '►';
+      position: absolute;
+      left: 0;
+      color: #ffcc00;
+    }
+    .character-abilities {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+    .character {
+      width: 45%;
+      min-width: 180px;
+      margin-bottom: 0.8rem;
+      text-align: center;
+    }
+    .character h4 {
+      color: #ffcc00;
+      margin-bottom: 0.4rem;
+      font-size: 0.8rem;
+    }
+    .character p {
+      font-size: 0.6rem;
+      color: #cccccc;
+    }
+    .navigation-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1rem 0 3rem 0;
+      position: sticky;
+      bottom: 1rem;
+      padding: 0.5rem;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      width: auto;
+    }
+    .nav-button {
+      font-family: 'Press Start 2P', cursive;
+      padding: 0.8rem 1rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .back-button {
+      background-color: #ff4444;
+      color: white;
+      box-shadow: 0 4px 0 #990000;
+    }
+    .back-button:hover {
+      background-color: #ff6666;
+      transform: translateY(-2px);
+    }
+    .back-button:active {
+      box-shadow: 0 1px 0 #990000;
+      transform: translateY(3px);
+    }
+    .play-button {
+      background-color: #44cc44;
+      color: white;
+      box-shadow: 0 4px 0 #009900;
+    }
+    .play-button:hover {
+      background-color: #66dd66;
+      transform: translateY(-2px);
+    }
+    .play-button:active {
+      box-shadow: 0 1px 0 #009900;
+      transform: translateY(3px);
+    }
+    @media (max-width: 768px) {
+      .controls-section {
+        flex-direction: column;
+        align-items: center;
+      }
+      .controls-column {
+        width: 95%;
+        min-width: unset;
+        margin-bottom: 1rem;
+        padding: 0.8rem;
+      }
+      .key {
+        width: 60px;
+        font-size: 0.6rem;
+      }
+      .action {
+        font-size: 0.6rem;
+      }
+      .character {
+        width: 100%;
+      }
+      .navigation-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+      }
+      .nav-button {
+        width: 100%;
+        padding: 0.6rem 0.8rem;
+      }
+      .credits-title {
+        font-size: 1.3rem;
+      }
+    }
+    @media (max-width: 320px) {
+      .controls-column h2 {
+        font-size: 0.9rem;
+      }
+      .key, .action {
+        font-size: 0.5rem;
+      }
+      .key {
+        width: 50px;
+        margin-right: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body style="margin: 0;">
+  <div class="credits-screen">
+    <h1 class="credits-title">COMO JOGAR</h1>
+    <div class="controls-section">
+      <div class="controls-column">
+        <h2>JOGADOR 1</h2>
+        <div class="control-group">
+          <div class="control"><span class="key">W</span><span class="action">Pular</span></div>
+          <div class="control"><span class="key">A</span><span class="action">Mover para Esquerda</span></div>
+          <div class="control"><span class="key">S</span><span class="action">Abaixar</span></div>
+          <div class="control"><span class="key">D</span><span class="action">Mover para Direita</span></div>
+          <div class="control"><span class="key">F</span><span class="action">Soco</span></div>
+          <div class="control"><span class="key">G</span><span class="action">Defender</span></div>
+        </div>
+        <h3 class="special-moves">GOLPES ESPECIAIS</h3>
+        <div class="control-group">
+          <div class="control"><span class="key">Q</span><span class="action">Ataque Especial</span></div>
+          <div class="control"><span class="key">E</span><span class="action">Super Ataque</span></div>
+        </div>
+      </div>
+      <div class="controls-column">
+        <h2>JOGADOR 2</h2>
+        <div class="control-group">
+          <div class="control"><span class="key">↑</span><span class="action">Pular</span></div>
+          <div class="control"><span class="key">←</span><span class="action">Mover para Esquerda</span></div>
+          <div class="control"><span class="key">↓</span><span class="action">Abaixar</span></div>
+          <div class="control"><span class="key">→</span><span class="action">Mover para Direita</span></div>
+          <div class="control"><span class="key">K</span><span class="action">Soco</span></div>
+          <div class="control"><span class="key">L</span><span class="action">Defender</span></div>
+        </div>
+        <h3 class="special-moves">GOLPES ESPECIAIS</h3>
+        <div class="control-group">
+          <div class="control"><span class="key">I</span><span class="action">Ataque Especial</span></div>
+          <div class="control"><span class="key">O</span><span class="action">Super Ataque</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="game-tips">
+      <h3>DICAS DE JOGO</h3>
+      <ul>
+        <li>Acerte golpes para encher sua barra de poder</li>
+        <li>Ataques Especiais consomem 30% da barra de poder</li>
+        <li>Super Ataques consomem 100% da barra de poder e causam muito dano</li>
+        <li>Defender reduz o dano recebido em 80%</li>
+        <li>Não é possível se mover enquanto defende</li>
+        <li>Ataques aéreos não podem ser defendidos</li>
+        <li>Vença a luta zerando a barra de vida do oponente</li>
+      </ul>
+    </div>
+    <div class="game-mechanics">
+      <h3>HABILIDADES DOS PERSONAGENS</h3>
+      <div class="character-abilities">
+        <div class="character">
+          <h4>RYU</h4>
+          <p>Lutador equilibrado com poderoso projétil Hadouken</p>
+        </div>
+        <div class="character">
+          <h4>KEN</h4>
+          <p>Movimentação rápida e forte Shoryuken</p>
+        </div>
+        <div class="character">
+          <h4>CHUN-LI</h4>
+          <p>Ataques rápidos e combos de múltiplos golpes</p>
+        </div>
+        <div class="character">
+          <h4>MAKOTO</h4>
+          <p>Golpes poderosos com alto dano</p>
+        </div>
+      </div>
+    </div>
+    <div class="navigation-buttons">
+      <button class="nav-button back-button" onclick="goToMenu()">VOLTAR AO MENU</button>
+      <button class="nav-button play-button" onclick="goToSelect()">SELECIONAR PERSONAGEM</button>
+    </div>
+  </div>
+  <script>
+    // Voltar ao menu inicial com ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        goToMenu();
+      }
+    });
+    function goToMenu() {
+      window.location.href = "menu.html";
+    }
+    function goToSelect() {
+      window.location.href = "selecao.html";
+    }
+  </script>
+</body>
+<script src="music.js"></script>
+</html>

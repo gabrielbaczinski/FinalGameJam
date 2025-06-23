@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Seleção de Personagem</title>
+    <meta name="viewport" content="width=1024">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #000;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .character-select {
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 2rem;
+            box-sizing: border-box;
+        }
+
+        .select-title {
+            font-size: 2rem;
+            color: #ffcc00;
+            text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000;
+            margin-bottom: 2rem;
+        }
+
+        .character-grid {
+            display: flex;
+            justify-content: space-between;
+            width: 90vw;
+            max-width: 1100px;
+            margin: 1rem auto;
+            position: relative;
+        }
+
+        .player-selection {
+            width: 45%;
+            text-align: center;
+        }
+
+        .player-selection h2 {
+            margin-bottom: 1rem;
+        }
+
+        .p1 h2 {
+            color: #4488ff;
+            text-shadow: 0 0 10px rgba(0, 100, 255, 0.8);
+        }
+
+        .p2 h2 {
+            color: #ff4444;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+        }
+
+        .character-portrait {
+            width: 100%;
+            height: 300px;
+            border: 3px solid #ffcc00;
+            position: relative;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .character-portrait img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .confirmed-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffcc00;
+            font-size: 2rem;
+            text-shadow: 0 0 10px red;
+        }
+
+        .character-info {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .character-name {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .character-special,
+        .character-country {
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+            opacity: 0.9;
+        }
+
+        .controls-hint {
+            margin-top: 1rem;
+            font-size: 0.7rem;
+            color: #aaaaaa;
+        }
+
+        .versus {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: red;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+            z-index: 10;
+        }
+
+        .countdown {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            color: yellow;
+            text-shadow: 0 0 20px red, 0 0 40px orange;
+            z-index: 100;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .select-navigation {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .back-button {
+            background-color: #ff4444;
+            border: none;
+            color: white;
+            padding: 0.6rem 1rem;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #990000;
+            transition: all 0.2s;
+        }
+
+        .back-button:hover {
+            background-color: #ff6666;
+            transform: translateY(-2px);
+        }
+
+        .back-button:active {
+            box-shadow: 0 1px 0 #990000;
+            transform: translateY(3px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="character-select">
+        <h1 class="select-title">SELECT YOUR FIGHTER</h1>
+        <div class="character-grid">
+            <div class="player-selection p1">
+                <h2>PLAYER 1</h2>
+                <div class="character-portrait" id="p1-portrait">
+                    <img id="p1-img" src="" alt="">
+                    <div class="confirmed-overlay" id="p1-confirmed" style="display:none;">READY!</div>
+                </div>
+                <div class="character-info">
+                    <div class="character-name" id="p1-name"></div>
+                    <div class="character-special" id="p1-special"></div>
+                    <div class="character-country" id="p1-country"></div>
+                </div>
+                <div class="controls-hint">
+                    USE A/D TO SELECT - F TO CONFIRM
+                </div>
+            </div>
+            <div class="versus">VS</div>
+            <div class="player-selection p2">
+                <h2>PLAYER 2</h2>
+                <div class="character-portrait" id="p2-portrait">
+                    <img id="p2-img" src="" alt="">
+                    <div class="confirmed-overlay" id="p2-confirmed" style="display:none;">READY!</div>
+                </div>
+                <div class="character-info">
+                    <div class="character-name" id="p2-name"></div>
+                    <div class="character-special" id="p2-special"></div>
+                    <div class="character-country" id="p2-country"></div>
+                </div>
+                <div class="controls-hint">
+                    USE ←/→ TO SELECT - K TO CONFIRM
+                </div>
+            </div>
+        </div>
+        <div class="countdown" id="countdown" style="display:none;">3</div>
+        <div class="select-navigation">
+            <button class="back-button" onclick="backToMenu()">BACK TO TITLE</button>
+        </div>
+    </div>
+    <script>
+        // Dados dos personagens
+        const characters = [
+            { id: 'ryu', name: 'RYU', special: 'HADOUKEN', country: 'JAPAN' },
+            { id: 'ken', name: 'KEN', special: 'SHORYUKEN', country: 'USA' },
+            { id: 'chun-li', name: 'CHUN-LI', special: 'KIKOKEN', country: 'CHINA' },
+            { id: 'makoto', name: 'MAKOTO', special: 'HAYATE', country: 'JAPAN' }
+        ];
+        // Imagens dos personagens
+        function getCharacterPortrait(characterId) {
+            const portraits = {
+                'ryu': 'https://www.justnopoint.com/zweifuss/select/14.gif',
+                'ken': 'https://www.justnopoint.com/zweifuss/select/19.gif',
+                'chun-li': 'https://www.justnopoint.com/zweifuss/select/10.gif',
+                'makoto': 'https://www.justnopoint.com/zweifuss/select/11.gif'
+            };
+            return portraits[characterId] || 'https://i.imgur.com/HgTRKQs.png';
+        }
+
+        // Estado
+        let p1Selection = 0;
+        let p2Selection = 1;
+        let p1Confirmed = false;
+        let p2Confirmed = false;
+        let countdown = null;
+        let countdownInterval = null;
+
+        // Atualiza a tela
+        function updateScreen() {
+            // Player 1
+            document.getElementById('p1-img').src = getCharacterPortrait(characters[p1Selection].id);
+            document.getElementById('p1-img').alt = characters[p1Selection].name;
+            document.getElementById('p1-name').textContent = characters[p1Selection].name;
+            document.getElementById('p1-special').textContent = "SPECIAL: " + characters[p1Selection].special;
+            document.getElementById('p1-country').textContent = characters[p1Selection].country;
+            document.getElementById('p1-confirmed').style.display = p1Confirmed ? 'flex' : 'none';
+
+            // Player 2
+            document.getElementById('p2-img').src = getCharacterPortrait(characters[p2Selection].id);
+            document.getElementById('p2-img').alt = characters[p2Selection].name;
+            document.getElementById('p2-name').textContent = characters[p2Selection].name;
+            document.getElementById('p2-special').textContent = "SPECIAL: " + characters[p2Selection].special;
+            document.getElementById('p2-country').textContent = characters[p2Selection].country;
+            document.getElementById('p2-confirmed').style.display = p2Confirmed ? 'flex' : 'none';
+
+            // Countdown
+            document.getElementById('countdown').style.display = countdown !== null ? 'flex' : 'none';
+            if (countdown !== null) {
+                document.getElementById('countdown').textContent = countdown;
+            }
+        }
+
+        // Iniciar contagem regressiva e depois iniciar o jogo
+        function startCountdown() {
+            countdown = 3;
+            updateScreen();
+            countdownInterval = setInterval(() => {
+                countdown--;
+                updateScreen();
+                if (countdown === 0) {
+                    clearInterval(countdownInterval);
+                    // Salvar seleção global e ir para o jogo
+                    localStorage.setItem('selectedPlayer1', JSON.stringify(characters[p1Selection]));
+                    localStorage.setItem('selectedPlayer2', JSON.stringify(characters[p2Selection]));
+                    window.location.href = "game.html";
+                }
+            }, 1000);
+        }
+
+        // Controles de teclado
+        document.addEventListener('keydown', function (e) {
+            if (countdown !== null) return;
+            // Player 1: A/D/F
+            if (!p1Confirmed) {
+                if (e.key === 'a' || e.key === 'A' || e.keyCode === 65) {
+                    p1Selection = p1Selection > 0 ? p1Selection - 1 : characters.length - 1;
+                    updateScreen();
+                }
+                if (e.key === 'd' || e.key === 'D' || e.keyCode === 68) {
+                    p1Selection = p1Selection < characters.length - 1 ? p1Selection + 1 : 0;
+                    updateScreen();
+                }
+                if (e.key === 'f' || e.key === 'F' || e.keyCode === 70) {
+                    p1Confirmed = true;
+                    updateScreen();
+                    if (p2Confirmed) startCountdown();
+                }
+            }
+            // Player 2: ←/→/K
+            if (!p2Confirmed) {
+                if (e.key === 'ArrowLeft' || e.keyCode === 37) {
+                    p2Selection = p2Selection > 0 ? p2Selection - 1 : characters.length - 1;
+                    updateScreen();
+                }
+                if (e.key === 'ArrowRight' || e.keyCode === 39) {
+                    p2Selection = p2Selection < characters.length - 1 ? p2Selection + 1 : 0;
+                    updateScreen();
+                }
+                if (e.key === 'k' || e.key === 'K' || e.keyCode === 75) {
+                    p2Confirmed = true;
+                    updateScreen();
+                    if (p1Confirmed) startCountdown();
+                }
+            }
+            // ESC cancela confirmação ou volta ao menu
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                if (p2Confirmed) { p2Confirmed = false; updateScreen(); return; }
+                if (p1Confirmed) { p1Confirmed = false; updateScreen(); return; }
+                backToMenu();
+            }
+        });
+
+        // Botão voltar
+        function backToMenu() {
+            window.location.href = "menu.html";
+        }
+
+        // Inicializa a tela
+        updateScreen();
+    </script>
+</body>
+<script src="music.js"></script>
+</html>
